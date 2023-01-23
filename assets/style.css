@@ -2,26 +2,14 @@ body {
     font-family: Verdana, sans-serif;
     margin: auto;
     padding: 20px;
-    max-width: 720px;
+    max-width: 820px;
     text-align: left;
     background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
     color: #444;
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-html::-webkit-scrollbar {
-    display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-html {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+    font-size: 20px;
 }
 
 h1,
@@ -126,7 +114,13 @@ content {
 }
 
 table {
-    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid black;
+    padding: 4px 8px;
 }
 
 hr {
@@ -295,12 +289,13 @@ ul.discover-posts li small a {
         color: #8cc2dd;
     }
 
-    code {
-        background-color: #777;
+    .highlight, .code, code {
+        background-color: #033e50;
     }
 
-    pre code {
+    code {
         color: #ddd;
+        padding: 0 3px;
     }
 
     blockquote {
