@@ -111,7 +111,7 @@ title: Sppmacd's Blog
                 element.append(li);
             }
         } catch (e) {
-            element.innerText = "Failed to fetch data: " + e;
+            element.innerHTML = "<span style='color:red'>Failed to fetch data: " + e + "</span>";
         }
     })();
 </script>
