@@ -1,0 +1,119 @@
+---
+layout: blog
+title: Sppmacd's Blog
+---
+
+<style>
+    #projects {
+        list-style-type: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding-left: 0;
+    }
+    #projects li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    #projects li :first-child {
+        font-size: 120%;
+    }
+</style>
+
+<h2>Sppmacd's Blog</h2>
+
+<p>Welcome to my blog.</p>
+
+<p>Projects I contributed to lately, fetched live from GitHub:</p>
+
+<ul id="projects">
+    Loading...
+</ul>
+
+<script>
+    const TOKEN = "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";
+
+    (async function () {
+        const element = document.getElementById("projects");
+        try {
+            const query = `
+{
+  user(login: "sppmacd") {
+    repositoriesContributedTo(
+      first: 100
+      orderBy: {field: NAME, direction: DESC}
+      includeUserRepositories: true
+      contributionTypes: COMMIT
+    ) {
+      totalCount
+      nodes {
+        nameWithOwner
+        url
+        defaultBranchRef {
+          target {
+            ... on Commit {
+              history(author: {id: "MDQ6VXNlcjQyOTY3MzQ5"}, first: 1) {
+                nodes {
+                  pushedDate
+                }
+              }
+            }
+          }
+        }
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+    `;
+            const repos = (
+                await (
+                    await fetch("https://api.github.com/graphql", {
+                        body: JSON.stringify({ query }),
+                        method: "POST",
+                        headers: {
+                            Authorization: `bearer ${TOKEN}`,
+                        },
+                    })
+                ).json()
+            ).data.user.repositoriesContributedTo.nodes;
+
+            repos.sort((a, b) => {
+                return (
+                    a.defaultBranchRef.target.history.nodes[0]?.pushedDate <
+                    b.defaultBranchRef.target.history.nodes[0]?.pushedDate
+                );
+            });
+            for (const repo of repos.slice(0, 4)) {
+                const li = document.createElement("li");
+                console.log(repo);
+                const lastPush =
+                    repo.defaultBranchRef.target.history.nodes[0].pushedDate;
+                // waiting for Temporal...
+                const lastPushString = new Intl.RelativeTimeFormat(undefined, {
+                    style: "narrow",
+                }).format(
+                    Math.round(
+                        (new Date(lastPush) - new Date()) /
+                            (24 * 60 * 60 * 1000)
+                    ),
+                    "days"
+                );
+                li.innerHTML = `<a href="${repo.url}">${repo.nameWithOwner}</a><span>${lastPushString}</span>`;
+                element.append(li);
+            }
+        } catch (e) {
+            element.innerText = "Failed to fetch data: " + e;
+        }
+    })();
+</script>
+
+<h2>My posts</h2>
