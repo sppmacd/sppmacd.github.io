@@ -110,6 +110,7 @@ title: Sppmacd's Blog
                 li.innerHTML = `<a href="${repo.url}">${repo.nameWithOwner}</a><span>${lastPushString}</span>`;
                 element.append(li);
             }
+            element.removeChild(element.firstChild);
         } catch (e) {
             element.innerHTML = "<span style='color:red'>Failed to fetch data: " + e + "</span>";
         }
