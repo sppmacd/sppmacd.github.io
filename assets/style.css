@@ -1,3 +1,6 @@
+@import "./highlight-light.css" (prefers-color-scheme: light);
+@import "./highlight-dark.css" (prefers-color-scheme: dark);
+
 body {
     font-family: Verdana, sans-serif;
     margin: auto;
@@ -118,7 +121,8 @@ table {
     border-collapse: collapse;
 }
 
-td, th {
+td,
+th {
     border: 1px solid black;
     padding: 4px 8px;
 }
@@ -147,7 +151,7 @@ code {
     border-radius: 3px;
     margin-block-start: 1em;
     margin-block-end: 1em;
-    overflow:auto;
+    overflow: auto;
 }
 
 blockquote {
@@ -267,7 +271,6 @@ ul.discover-posts li small a {
     color: #777 !important;
 }
 
-
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #01242e;
@@ -289,7 +292,9 @@ ul.discover-posts li small a {
         color: #8cc2dd;
     }
 
-    .highlight, .code, code {
+    .highlight,
+    .code,
+    code {
         background-color: #033e50;
     }
 
@@ -306,8 +311,6 @@ ul.discover-posts li small a {
         color: #aaa;
     }
 }
-
-
 
 ul.blog-posts {
     padding-bottom: 0.61803rem;
@@ -329,7 +332,6 @@ body:hover {
     border-image: none;
     border-width: 0;
 }
-
 
 small a {
     padding-right: 0.61803rem;
