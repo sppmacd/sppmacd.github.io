@@ -165,6 +165,6 @@ For data that may be variable size, we just store a HeapSpan (pointer and size) 
 
 ## Summary
 
-As you can see, this format is not great and needs many tweaks. For now, we don't care about backwards compatibility so we can add or remove fields to the header, for example
+As you can see, this format is not great and needs many tweaks. For now, we don't care about backwards compatibility so we can add or remove fields to the header, for example.
 
 If you weren't bored by this article and you have read it in the whole, thanks and until next time!
