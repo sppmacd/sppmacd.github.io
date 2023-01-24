@@ -29,7 +29,7 @@ title: Sppmacd's Blog
 
 <p>Welcome to my blog.</p>
 
-<p>Projects I contributed to lately, fetched live from GitHub:</p>
+<p>Projects I contributed to lately, fetched from GitHub:</p>
 
 <ul id="projects">
     Loading...
@@ -41,42 +41,82 @@ title: Sppmacd's Blog
     const Tpart3 = "vScWP4kkOXSNwBKC1jO8h93SOA24";
     const TOKEN = Tpart1 + Tpart2 + Tpart3;
 
+    // https://www.builder.io/blog/relative-time
+    function getRelativeTimeString(datediffMs, lang) {
+        const deltaSeconds = Math.round(datediffMs / 1000);
+
+        // Array reprsenting one minute, hour, day, week, month, etc in seconds
+        const cutoffs = [
+            60,
+            3600,
+            86400,
+            86400 * 7,
+            86400 * 30,
+            86400 * 365,
+            Infinity,
+        ];
+
+        // Array equivalent to the above but in the string representation of the units
+        const units = [
+            "second",
+            "minute",
+            "hour",
+            "day",
+            "week",
+            "month",
+            "year",
+        ];
+
+        // Grab the ideal cutoff unit
+        const unitIndex = cutoffs.findIndex(
+            (cutoff) => cutoff > Math.abs(deltaSeconds)
+        );
+
+        // Get the divisor to divide from the seconds. E.g. if our unit is "day" our divisor
+        // is one day in seconds, so we can divide our seconds by this to get the # of days
+        const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
+
+        // Intl.RelativeTimeFormat do its magic
+        const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+        return rtf.format(Math.floor(deltaSeconds / divisor), units[unitIndex]);
+    }
+
     (async function () {
         const element = document.getElementById("projects");
         try {
             const query = `
-{
-  user(login: "sppmacd") {
-    repositoriesContributedTo(
-      first: 100
-      orderBy: {field: NAME, direction: DESC}
-      includeUserRepositories: true
-      contributionTypes: COMMIT
-    ) {
-      totalCount
-      nodes {
-        nameWithOwner
-        url
-        defaultBranchRef {
-          target {
-            ... on Commit {
-              history(author: {id: "MDQ6VXNlcjQyOTY3MzQ5"}, first: 1) {
-                nodes {
-                  pushedDate
+    {
+      user(login: "sppmacd") {
+        repositoriesContributedTo(
+          first: 100
+          orderBy: {field: NAME, direction: DESC}
+          includeUserRepositories: true
+          contributionTypes: COMMIT
+        ) {
+          totalCount
+          nodes {
+            nameWithOwner
+            url
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(author: {id: "MDQ6VXNlcjQyOTY3MzQ5"}, first: 1) {
+                    nodes {
+                      pushedDate
+                    }
+                  }
                 }
               }
             }
           }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
         }
       }
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
     }
-  }
-}
-    `;
+        `;
             const repos = (
                 await (
                     await fetch("https://api.github.com/graphql", {
@@ -101,15 +141,12 @@ title: Sppmacd's Blog
                 const lastPush =
                     repo.defaultBranchRef.target.history.nodes[0].pushedDate;
                 // waiting for Temporal...
-                const lastPushString = new Intl.RelativeTimeFormat(undefined, {
-                    style: "narrow",
-                }).format(
-                    Math.round(
-                        (new Date(lastPush) - new Date()) /
-                            (24 * 60 * 60 * 1000)
-                    ),
-                    "days"
+                const msSinceLastPush = new Date(lastPush) - new Date();
+                const lastPushString = getRelativeTimeString(
+                    msSinceLastPush,
+                    undefined
                 );
+
                 li.innerHTML = `<a href="${repo.url}">${repo.nameWithOwner}</a><span>${lastPushString}</span>`;
                 element.append(li);
             }
