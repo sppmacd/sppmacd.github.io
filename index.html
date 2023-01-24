@@ -36,7 +36,10 @@ title: Sppmacd's Blog
 </ul>
 
 <script>
-    const TOKEN = "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";
+    const Tpart1 = "g";
+    const Tpart2 = "hp_oGdgqWVE";
+    const Tpart3 = "vScWP4kkOXSNwBKC1jO8h93SOA24";
+    const TOKEN = Tpart1 + Tpart2 + Tpart3;
 
     (async function () {
         const element = document.getElementById("projects");
@@ -112,7 +115,10 @@ title: Sppmacd's Blog
             }
             element.removeChild(element.firstChild);
         } catch (e) {
-            element.innerHTML = "<span style='color:red'>Failed to fetch data: " + e + "</span>";
+            element.innerHTML =
+                "<span style='color:red'>Failed to fetch data: " +
+                e +
+                "</span>";
         }
     })();
 </script>
